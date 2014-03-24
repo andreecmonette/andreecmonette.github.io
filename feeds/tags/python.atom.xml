@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Andree Monette</title><link href="http://acmonette.com/" rel="alternate"></link><link href="http://acmonette.com/feeds/tags/python.atom.xml" rel="self"></link><id>http://acmonette.com/</id><updated>2014-03-24T01:00:00-04:00</updated><entry><title>Counting down from infinity, and other tricks with __del__</title><link href="http://acmonette.com/here-there-be-pydras.html" rel="alternate"></link><updated>2014-03-24T01:00:00-04:00</updated><author><name>Andree Monette</name></author><id>tag:acmonette.com,2014-03-24:here-there-be-pydras.html</id><summary type="html">&lt;p&gt;Today, I solved 8-queens in Python's garbage collector, along with other horrific abuses of same. Python provides the &lt;a href="http://stackoverflow.com/questions/3554952/del-at-program-end"&gt;rather&lt;/a&gt; &lt;a href="http://stackoverflow.com/questions/10352480/how-to-use-del-in-a-reliable-way"&gt;controversial&lt;/a&gt; magic method &lt;code&gt;__del__&lt;/code&gt;, which (might!) be called before an object is garbage collected. Playing with this (in CPython 2.7.3) yields some amusing results.&lt;/p&gt;
+&lt;p&gt;First, there's figuring out where &lt;code&gt;__del__&lt;/code&gt; even gets called. I wrote a &lt;a href="http://github.com/andreecmonette/pydras/blob/master/omnom.py"&gt;script to illustrate some common cases&lt;/a&gt; -- Python uses &lt;a href="http://en.wikipedia.org/wiki/Reference_counting"&gt;reference counting&lt;/a&gt; with explicit collection of cycles. That is, for each object that exists, Python keeps an count of the number of times that variable is referred to, such as if it gets assigned explicitly to a variable name, included in an array, assigned as an attribute of some other object, and so on. Whenever a variable name passes out of scope or some containing object is garbage collected, the reference counter for that object is decremented. Once it hits 0, Python (usually, we'll see an exception soon) garbage collects the object, calling the &lt;code&gt;__del__&lt;/code&gt; method and freeing up its memory. Python also attempts to clear cyclic references, such as in the following example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Omnom&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Omnom&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;It notably won't do so if they have user-defined &lt;code&gt;__del__&lt;/code&gt; methods, as it doesn't know what order is safe to execute those methods in.&lt;/p&gt;
+&lt;p&gt;The details of garbage collection are implementation-specific, so there are differences in how this is handled between the default CPython and other implementations. There are also interesting consequences from, for example, being in a REPL - whatever was returned to the terminal last ends up in the &lt;code&gt;_&lt;/code&gt; variable, so it counts as a reference and the object isn't garbage collected immediately.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;So how do we abuse this? Well, we can write &lt;a href="http://github.com/andreecmonette/pydras/blob/master/countdown.py"&gt;a program that counts backwards from "infinity"&lt;/a&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Countdown&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;__del__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;Countdown&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt;
+&lt;span class="n"&gt;Countdown&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This produces:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;Exception&lt;/span&gt; &lt;span class="n"&gt;RuntimeError&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;maximum&lt;/span&gt; &lt;span class="n"&gt;recursion&lt;/span&gt; &lt;span class="n"&gt;depth&lt;/span&gt; &lt;span class="n"&gt;exceeded&lt;/span&gt; &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="n"&gt;calling&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="n"&gt;Python&lt;/span&gt; &lt;span class="n"&gt;object&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt; &lt;span class="n"&gt;in&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;bound&lt;/span&gt; &lt;span class="n"&gt;method&lt;/span&gt; &lt;span class="n"&gt;Countdown&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__del__&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;__main__&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Countdown&lt;/span&gt; &lt;span class="n"&gt;instance&lt;/span&gt; &lt;span class="n"&gt;at&lt;/span&gt; &lt;span class="mh"&gt;0x7f570b3ea878&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;ignored&lt;/span&gt;
+&lt;span class="mi"&gt;336&lt;/span&gt;
+&lt;span class="mi"&gt;335&lt;/span&gt;
+&lt;span class="mi"&gt;334&lt;/span&gt;
+&lt;span class="mi"&gt;333&lt;/span&gt;
+&lt;span class="p"&gt;...&lt;/span&gt;
+&lt;span class="mi"&gt;9&lt;/span&gt;
+&lt;span class="mi"&gt;8&lt;/span&gt;
+&lt;span class="mi"&gt;7&lt;/span&gt;
+&lt;span class="mi"&gt;6&lt;/span&gt;
+&lt;span class="mi"&gt;5&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;In this case, &lt;code&gt;Countdown()&lt;/code&gt; instances are generated until the recursion limit is reached. This doesn't halt program execution because &lt;code&gt;__del__&lt;/code&gt; explicitly ignores exceptions, but still short-circuits the function call and the instantiations end. They are then resolved in reverse order (actually, outwards from the innermost object).&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;Another trick that we can do is to create a mythological beast of old, spawning two instances for each deleted instance. Enter &lt;a href="http://github.com/andreecmonette/pydras/blob/master/pydra.py"&gt;the Pydra&lt;/a&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Pydra&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;neck&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;neck&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;neck&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;__del__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;neck&lt;/span&gt;
+    &lt;span class="n"&gt;Pydra&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;neck&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;l&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;Pydra&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;neck&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;r&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;Pydra&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;As the beast's heads are cut off, two immediately grow back from the severed stump - at least until the recursion limit is hit. What do we get from this? Setting the recursion limit to a reasonably low number with an inserted call of &lt;code&gt;sys.setrecursionlimit(16)&lt;/code&gt; and suppressing the ignored recursion limit exceptions shows nicely what's going on:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;python&lt;/span&gt; &lt;span class="n"&gt;pydra&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;/&lt;/span&gt;&lt;span class="n"&gt;dev&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;null&lt;/span&gt;
+
+&lt;span class="n"&gt;l&lt;/span&gt;
+&lt;span class="n"&gt;ll&lt;/span&gt;
+&lt;span class="n"&gt;lll&lt;/span&gt;
+&lt;span class="n"&gt;llr&lt;/span&gt;
+&lt;span class="n"&gt;lr&lt;/span&gt;
+&lt;span class="n"&gt;lrl&lt;/span&gt;
+&lt;span class="n"&gt;lrr&lt;/span&gt;
+&lt;span class="n"&gt;r&lt;/span&gt;
+&lt;span class="n"&gt;rl&lt;/span&gt;
+&lt;span class="n"&gt;rll&lt;/span&gt;
+&lt;span class="n"&gt;rlr&lt;/span&gt;
+&lt;span class="n"&gt;rr&lt;/span&gt;
+&lt;span class="n"&gt;rrl&lt;/span&gt;
+&lt;span class="n"&gt;rrr&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The garbage collector executes a &lt;a href="http://en.wikipedia.org/wiki/Depth-first_search"&gt;depth-first search&lt;/a&gt;! Other tree traversals are possible as well - breadth-first search, for example, is possible by defining a &lt;code&gt;__del__&lt;/code&gt; method in &lt;a href="https://github.com/andreecmonette/pydras/blob/master/shyPydra.py"&gt;a container class&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;By making a very small change to this program, it's possible to create an unbounded memory leak. The &lt;a href="http://github.com/andreecmonette/pydras/blob/master/learneanPydra.py"&gt;Learnean Pydra&lt;/a&gt; assigns the two created objects to local variables. This causes the call stack pointer to be incremented as the tree deepens. Once this pointer reaches 50 (which is defined in the CPython source in &lt;a href="https://github.com/python-git/python/blob/master/Include/object.h"&gt;includes/object.h&lt;/a&gt; as PyTrash_UNWIND_LEVEL) it's added to a trashcan stack for deallocation later. This also causes the tree traversal to terminate at 50 and unwind, doing a &lt;a href="/images/fractalDFS.png"&gt;pleasant looking depth-first search&lt;/a&gt;. Since the deallocator continues to get called on objects when the call stack is longer than 50, it keeps allocating more memory onto the heap with the &lt;code&gt;mmap()&lt;/code&gt; and &lt;code&gt;brk()&lt;/code&gt; system calls (&lt;a href="http://jvns.ca/blog/2013/12/22/fun-with-strace/"&gt;thanks, strace!&lt;/a&gt;) until the kernel panics. Without the delay introduced by &lt;code&gt;print&lt;/code&gt;ing the output, this can fill all the memory up in a typical laptop within a few seconds. By contrast, the Pydra never allocates additional memory at all, and in fact makes no system calls besides &lt;code&gt;write()&lt;/code&gt; to spit output (and ignored errors) to stdout and stderr.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;Finally, I decided to cap off all this &lt;code&gt;__del__&lt;/code&gt; nonsense by implementing an 8-queens solver using the tree traversal we get for free using the garbage collector. The result is &lt;a href="https://github.com/andreecmonette/pydras/blob/master/delqueen.py"&gt;delqueen&lt;/a&gt;, a standalone or &lt;a href="https://github.com/andreecmonette/pydras/blob/master/importqueens.py"&gt;importable&lt;/a&gt; module that defines a class method and assigns an object representing an empty board. Then it loops until the user terminates the program with &lt;code&gt;SIGINT&lt;/code&gt;/&lt;code&gt;^C&lt;/code&gt;, at which point the board is garbage collected. Upon collection, a board checks to see if it's an illegal position or a solution (incrementing a solution counter crudely slapped on the &lt;code&gt;__builtins__&lt;/code&gt; module, because if we've abused Python this far, might as well take it all the way). If it isn't, it spawns 8 instances of its own class with queens added to the following row. To add to the absurdity, this is in fact an N-queens solver, with N being the length of &lt;code&gt;__name__&lt;/code&gt;. (Unless explicitly set by an importing file, this is either &lt;code&gt;'__main__'&lt;/code&gt; or &lt;code&gt;'delqueen'&lt;/code&gt;, which are incidentally 8 characters long.)&lt;/p&gt;
+&lt;p&gt;The results should be, at the very least, informative:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="nx"&gt;python&lt;/span&gt; &lt;span class="nx"&gt;delqueen.py&lt;/span&gt;
+&lt;span class="nb"&gt;Interrupt&lt;/span&gt; &lt;span class="nx"&gt;me&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;
+&lt;span class="p"&gt;^&lt;/span&gt;&lt;span class="nx"&gt;CTraceback&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;most&lt;/span&gt; &lt;span class="nx"&gt;recent&lt;/span&gt; &lt;span class="nb"&gt;call&lt;/span&gt; &lt;span class="nb"&gt;last&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+  &lt;span class="nb"&gt;File&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;delqueen.py&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;line&lt;/span&gt; &lt;span class="mi"&gt;39&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="nx"&gt;KeyboardInterrupt&lt;/span&gt;
+        &lt;span class="mi"&gt;15720&lt;/span&gt; &lt;span class="nx"&gt;board&lt;/span&gt; &lt;span class="nx"&gt;states&lt;/span&gt; &lt;span class="nx"&gt;traversed.&lt;/span&gt;
+        &lt;span class="nx"&gt;The&lt;/span&gt; &lt;span class="nx"&gt;number&lt;/span&gt; &lt;span class="nx"&gt;of&lt;/span&gt; &lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="na"&gt;-queens&lt;/span&gt; &lt;span class="nx"&gt;solutions&lt;/span&gt; &lt;span class="nx"&gt;is&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;92&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="coding"></category><category term="hacker school"></category><category term="python"></category></entry></feed>

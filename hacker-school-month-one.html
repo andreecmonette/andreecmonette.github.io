@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Hacker School - the first four weeks - Andree Monette</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="Andree Monette" />
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" />	
+	
+        <link rel="stylesheet" href="./theme/css/pygment.css" />
+        <link rel="stylesheet" href="./theme/css/voidybootstrap.css" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="shortcut icon" href="./favicon.ico" />
+
+        <link href="http://acmonette.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Andree Monette Atom Feed" />
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-49329911-1', '');
+  ga('send', 'pageview');
+
+</script>
+  </head>
+
+  <body>
+    <div class="navbar navbar-default" role="navigation">
+      <div class="container">
+	   <div class="navbar-header">
+		<button type="button" class="navbar-toggle" 
+				data-toggle="collapse" data-target="#main-navbar-collapse">
+		  <span class="sr-only">Toggle navigation</span>
+		  <span class="icon-bar"></span>
+		  <span class="icon-bar"></span>
+		  <span class="icon-bar"></span>
+		</button>
+		<a class="navbar-brand" href="./" rel="home">Home</a>
+       </div>
+
+      <div class="collapse navbar-collapse" id="main-navbar-collapse">
+        <ul class="nav navbar-nav">
+          <!-- <li> <a href="./">Home</a> </li> -->
+            <li class="divider"></li>
+          <li><a href="./archives.html">Archives</a></li>
+          <li class="divider"></li>
+            <li><a href="http://acmonette.com/feeds/all.atom.xml" 
+                   type="application/atom+xml" rel="alternate">
+                <i class="fa fa-rss fa-fw fa-lg"></i> </a></li>
+        </ul> <!-- /nav -->
+      </div> <!-- /navbar-collapse -->
+	  </div> <!-- /container -->
+    </div> <!-- /navbar -->
+
+	<div class="jumbotron" id="overview">
+	  <div class="container">
+		<h1><a href="./">Andree Monette</a></h1>
+		<p class="lead">Thoughts, in stereo.</p>
+	  </div>
+	</div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-9" id="content">
+<article itemscope="itemscope" itemtype="http://schema.org/BlogPosting">
+  <header>
+<div class="article-header">
+    <abbr class="article-prehead">
+	  Mon 10 March 2014
+	</abbr> <!-- /.article-prehead -->
+	<h1>
+	  <a href="./hacker-school-month-one.html" rel="bookmark"
+		 title="Permalink to Hacker School - the first four weeks">
+		Hacker School - the first four weeks
+	  </a>
+	</h1>
+    <div class="article-posthead">
+	  <p>
+          Posted by <a href="./author/andree-monette.html">Andree Monette</a>
+		in 
+		<a href="./category/programming.html">
+		  Programming</a>
+		&nbsp;&nbsp;
+	  </p>
+	</div> <!-- /.article-posthead -->
+</div> <!-- /.article-header -->  </header>
+  <div class="content-body" itemprop="text articleBody">
+	<p>The first week of <a href="http://hackerschool.com">Hacker School</a> I started out worried that I'd have trouble finding my way and being able to contribute meaningfully to a project. I'm about four weeks in now, and I can say proudly now that the opposite is true. In the past four weeks, I've paired with two awesome fellow programmers and pushed out two big projects and have started work on a third. I've also had a number of wonderful smaller collaborations with people on a number of topics both in and far out of my standard comfort zone, and have felt like I've struck the right balance over my time here of excited and terrified.</p>
+<hr />
+<p>The three major projects I've been working on so far have been:</p>
+<ul>
+<li><a href="https://github.com/PaddyBadger/BouncyBitcoinApp">BouncyBitcoin</a>, an Android app written with <a href="https://github.com/PaddyBadger">PaddyBadger</a> that pulls a number (in this case, the price of Bitcoin in a choice of four currencies) from a web endpoint and constructs a font made of balls to display the number on the screen. The balls can be pushed around by the user's finger, and suffer the effects of gravity (measured by the phone accelerometer) when not busy displaying the price. When they bounce off the edges of the screen, they vibrate the phone. This may be the most distracting thing I've built with someone from scratch in four days.</li>
+<li><a href="https://github.com/sudowhoami/distroweb">DistroWeb</a>, a distributed webserver written with <a href="https://github.com/sudowhoami">Rose Ames</a>. DistroWeb implements a <a href="http://en.wikipedia.org/wiki/Distributed_hash_table">distributed hash table</a> (thanks to <a href="http://davidad.github.io/">davidad</a> for the suggestion) over a <a href="http://en.wikipedia.org/wiki/Hamming_distance">Hamming distance metric</a> to fetch tracker files which are used to download pages from peers on a network to a proxy server, which in turn listens for browser requests on the user's local machine. Future ideas for this include a voluntary, client-editable "suggested bookmark" system of DNS, versioning and signing of documents with private keys to allow for persistent editable webpages, and a distributed search feature using <a href="http://en.wikipedia.org/wiki/Overlay_multicast">overlay multicast</a> and <a href="http://en.wikipedia.org/wiki/Bloom_filter">Bloom filters</a> to turn the normally storage-intensive deterministic task of search into a distributable probabilistic one.</li>
+<li>This week I've started <a href="https://github.com/andreecmonette/yapa">yapa</a>, an implementation of the pegboard game Plinko, where a disc falls through several pegs and settles finally in a spot at the bottom. I'm looking to do something a bit odd with this by implementing a physics engine which parametrizes motion from one timestep to the next and calculates minima for distance equations explicitly (using the quadratic equation without gravity or the cubic equation with it) to detect collisions, then pushes collision events onto a priority queue (priority in this case being a fraction of the current timestep) and propogates the changed equations forward to detect further collisions. This should result in a physics engine which a) runs slower than typical such engines, but b) is more fun to implement, and will come up with accurate physics no matter what the computational lag is or how many collisions occur in one timestep, floating point weirdness aside. (Maybe I should do the calculations symbolically?) I've already spoken to a few Hacker Schoolers who are interested in pairing on this, so that's pretty exciting.</li>
+</ul>
+<hr />
+<p>Meanwhile, I've worked on a few smaller things:</p>
+<ul>
+<li>The first day, I learned about <a href="http://scikit-learn.org/stable/">scikit-learn</a> from <a href="http://mathamy.com/">Amy Hanlon</a>, and had a fun time shooting down bugs in a Usenet post classification problem.</li>
+<li>I've explored the weird and wonderful land of Haskell, Elm and functional programming, mostly with Chen Lin and <a href="https://github.com/plredmond">Patrick Redmond</a>. Thanks to <a href="https://github.com/evancz">Evan Czaplicki</a> for a super accessible explanation of <a href="http://en.wikipedia.org/wiki/Monad_(functional_programming)">monads</a> (they map and join!)</li>
+<li>Davidad led a workshop on x64 assembly that covered his <a href="http://davidad.github.io/blog/2014/02/25/overkilling-the-8-queens-problem/">incredibly fast and elegantly designed 8-queens solver</a> that got me super excited about assembly - I'm strongly considering implementing the distributed search algorithm in assembly now (along with something like CUDA).</li>
+<li>Rose has given me invaluable tutoring on <a href="http://www.vim.org/">vim</a>, which is now my main editor.</li>
+<li><a href="http://lord.io">Robert Lord</a> (who incidentally has an awesome domain name) gave me invaluable assistance with getting <a href="http://threejs.org">three.js</a> up, which I'm implementing yapa in. He also revived the Iron Blogger challenge, and is thus in some way responsible for this whole post existing.</li>
+<li>Amy also wrote a <a href="http://mathamy.com/migrating-to-github-pages-using-pelican.html">awesome Pelican/Github Pages tutorial</a>, which was of immense help getting this blog set up. She was also super helpful with getting the configuration working with the particular theme I'm using.</li>
+</ul>
+<p>I've missed writing about countless awesome pairing moments, presentations, happenstance conversations, tabletop games, banh mi lunches, and random moments of cool. I'm really hoping I'll get to them at some point, but there's such a density of awesome that it'd be hard to encapsulate it all. The amount and potency of concentrated <a href="http://jvns.ca/blog/2014/03/10/help/">help</a> that goes on here blows my mind, and I can't wait to see what happens in the next few months. (I won't wait that long to blog again, though - due to Iron Blogger, I'm definitely going to blog this week, and I suspect I'll be blogging more often than that. I'm going to offer my own opinions about what makes Hacker School so great, as well as go more into detail on some of the projects that I've been working on here.)</p>
+  </div>
+
+
+<div class="article-tag-list">
+<span class="label label-default">Tags</span>
+	<a href="./tag/hacker-school.html"><i class="fa fa-tag"></i>hacker school</a>&nbsp;
+	<a href="./tag/coding.html"><i class="fa fa-tag"></i>coding</a>&nbsp;
+</div>
+  <hr />
+  <div class="well well-sm">  <!-- Social media sharing buttons -->
+
+    <!-- Google+ -->
+    <div class="g-plus" data-action="share" data-annotation="bubble"></div>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <div class="g-plusone" data-size="medium"></div>&nbsp;
+
+    <!-- Facebook -->
+    <div class="fb-like" 
+         data-href="./hacker-school-month-one.html" 
+         data-layout="button_count" 
+         data-action="like" data-show-faces="true" 
+         data-share="true">
+    </div>
+    &nbsp;
+  </div> <!-- /Social media sharing buttons -->
+</article>
+        </div><!-- /content -->
+
+        <div class="col-md-3 sidebar-nav" id="sidebar">
+
+<div class="row">
+<div class="col-xs-6 col-md-12">
+<h4><i class="fa fa-comment fa-fw fa-lg"></i> Social</h4>
+<ul class="list-unstyled social-links">
+    <li><a href="http://twitter.com/andreemonette" target="_blank">
+<i class="fa fa-twitter-square fa-fw fa-lg" title="Twitter"></i> 		Twitter
+	</a></li>
+    <li><a href="http://github.com/andreecmonette" target="_blank">
+<i class="fa fa-github-square fa-fw fa-lg" title="GitHub"></i> 		GitHub
+	</a></li>
+</ul>
+</div>
+
+<div class="col-xs-6 col-md-12">
+<h4><i class="fa fa-folder fa-fw fa-lg"></i> Categories</h4>
+<ul class="list-unstyled category-links">
+  <li><a href="./category/blog.html" >
+    <i class="fa fa-folder-open fa-fw fa-lg"></i> Blog</a></li>
+  <li><a href="./category/programming.html" >
+    <i class="fa fa-folder-open fa-fw fa-lg"></i> Programming</a></li>
+</ul>
+</div>
+
+</div> <!-- /row -->
+
+<h4><i class="fa fa-tags fa-fw fa-lg"></i> Tags</h4>
+<p class="tag-cloud">
+<span class="tag-1">
+    <a href="./tag/coding.html">
+        <i class="fa fa-tag fa-fw fa-lg"></i>coding
+    </a>
+</span>
+<span class="tag-1">
+    <a href="./tag/hacker-school.html">
+        <i class="fa fa-tag fa-fw fa-lg"></i>hacker school
+    </a>
+</span>
+<span class="tag-4">
+    <a href="./tag/node.html">
+        <i class="fa fa-tag fa-fw fa-lg"></i>node
+    </a>
+</span>
+<span class="tag-4">
+    <a href="./tag/distroweb.html">
+        <i class="fa fa-tag fa-fw fa-lg"></i>distroweb
+    </a>
+</span>
+<span class="tag-4">
+    <a href="./tag/javascript.html">
+        <i class="fa fa-tag fa-fw fa-lg"></i>javascript
+    </a>
+</span>
+<span class="tag-4">
+    <a href="./tag/beginning.html">
+        <i class="fa fa-tag fa-fw fa-lg"></i>beginning
+    </a>
+</span>
+<span class="tag-4">
+    <a href="./tag/python.html">
+        <i class="fa fa-tag fa-fw fa-lg"></i>python
+    </a>
+</span>
+<span class="tag-4">
+    <a href="./tag/musing.html">
+        <i class="fa fa-tag fa-fw fa-lg"></i>musing
+    </a>
+</span>
+</p>
+
+<h4><i class="fa fa-rss fa-fw fa-lg"></i> Feeds</h4>
+<ul class="list-unstyled">
+    <li><a href="http://acmonette.com/feeds/all.atom.xml" 
+		   type="application/atom+xml" rel="alternate">
+		<i class="fa fa-rss-square fa-fw fa-lg"></i> Atom Feed</a></li>
+</ul>
+
+<hr />
+
+        </div><!--/sidebar -->
+      </div><!--/row-->
+    </div><!--/container-->
+
+    <div class="container">
+      <footer id="page-footer">
+ 
+        <address id="colophon">
+          Blog powered by <a href="http://getpelican.com/">Pelican</a>
+                      and <a href="http://python.org">Python</a>  
+		  &nbsp;&bull;&nbsp;
+		  <a href="https://github.com/robulouski/voidy-bootstrap"
+			 target="_blank">VoidyBootstrap</a> theme by 
+		  <a href="http://www.voidynullness.net"
+			 target="_blank">RKI</a>  
+        </address><!-- /colophon  -->
+      </footer>
+	</div>
+
+
+    <!-- javascript -->
+	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<!-- Facebook -->
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+</script>
+
+<!-- Twitter -->
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+<!-- Google+ -->
+<!-- Synchronous 
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+-->
+<!-- Asynchronous -->
+<script type="text/javascript">
+  (function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/platform.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+</script>  </body>
+</html>

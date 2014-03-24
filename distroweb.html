@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>DistroWeb: past, present, and future - Andree Monette</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="Andree Monette" />
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" />	
+	
+        <link rel="stylesheet" href="./theme/css/pygment.css" />
+        <link rel="stylesheet" href="./theme/css/voidybootstrap.css" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="shortcut icon" href="./favicon.ico" />
+
+        <link href="http://acmonette.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Andree Monette Atom Feed" />
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-49329911-1', '');
+  ga('send', 'pageview');
+
+</script>
+  </head>
+
+  <body>
+    <div class="navbar navbar-default" role="navigation">
+      <div class="container">
+	   <div class="navbar-header">
+		<button type="button" class="navbar-toggle" 
+				data-toggle="collapse" data-target="#main-navbar-collapse">
+		  <span class="sr-only">Toggle navigation</span>
+		  <span class="icon-bar"></span>
+		  <span class="icon-bar"></span>
+		  <span class="icon-bar"></span>
+		</button>
+		<a class="navbar-brand" href="./" rel="home">Home</a>
+       </div>
+
+      <div class="collapse navbar-collapse" id="main-navbar-collapse">
+        <ul class="nav navbar-nav">
+          <!-- <li> <a href="./">Home</a> </li> -->
+            <li class="divider"></li>
+          <li><a href="./archives.html">Archives</a></li>
+          <li class="divider"></li>
+            <li><a href="http://acmonette.com/feeds/all.atom.xml" 
+                   type="application/atom+xml" rel="alternate">
+                <i class="fa fa-rss fa-fw fa-lg"></i> </a></li>
+        </ul> <!-- /nav -->
+      </div> <!-- /navbar-collapse -->
+	  </div> <!-- /container -->
+    </div> <!-- /navbar -->
+
+	<div class="jumbotron" id="overview">
+	  <div class="container">
+		<h1><a href="./">Andree Monette</a></h1>
+		<p class="lead">Thoughts, in stereo.</p>
+	  </div>
+	</div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-9" id="content">
+<article itemscope="itemscope" itemtype="http://schema.org/BlogPosting">
+  <header>
+<div class="article-header">
+    <abbr class="article-prehead">
+	  Sun 16 March 2014
+	</abbr> <!-- /.article-prehead -->
+	<h1>
+	  <a href="./distroweb.html" rel="bookmark"
+		 title="Permalink to DistroWeb: past, present, and future">
+		DistroWeb: past, present, and future
+	  </a>
+	</h1>
+    <div class="article-posthead">
+	  <p>
+          Posted by <a href="./author/andree-monette.html">Andree Monette</a>
+		in 
+		<a href="./category/programming.html">
+		  Programming</a>
+		&nbsp;&nbsp;
+	  </p>
+	</div> <!-- /.article-posthead -->
+</div> <!-- /.article-header -->  </header>
+  <div class="content-body" itemprop="text articleBody">
+	<p>The idea for <a href="https://github.com/sudowhoami/distroweb/">DistroWeb</a> came to <a href="https://github.com/sudowhoami/">Rose Ames</a> and I during a <a href="http://www.gogocurryusa-ny.com/">late-night Japanese curry dinner</a> after having just seen <a href="http://www.meetup.com/ny-tech/events/164513032/">Richard Stallman's talk at the Cooper Union</a> on free software. We didn't implement any ideas from the talk itself, but it got us in a mood of thinking about distributed systems. We chatted about what major centralized systems could be decentralized. A few major examples came to mind:</p>
+<ul>
+<li>Website hosting. Frequently, content is hosted on a single server or set of servers and served from that centralized location to clients who ask for it. When content is mirrored, a central location points to mirrors, which is quite easy to target or disrupt.</li>
+<li>The <a href="http://en.wikipedia.org/wiki/Domain_Name_System">domain name</a> system - essentially, it's controlled by a small committee of developers from seven different countries, who all meet in data centres in the US a few times a year to renew the keys for the root DNS server.</li>
+<li>Search is also centralized, mostly around such companies as Google.</li>
+</ul>
+<p>DistroWeb is essentially an <a href="http://en.wikipedia.org/wiki/Overlay_network">overlay network</a> over the Internet that imitates the World Wide Web, serving documents to browsers from remote machines that are uniquely identified by a URL - currently, that URL is <code>http://localhost:1234/distroweb/&lt;hash&gt;</code>, with <code>&lt;hash&gt;</code> serving as a unique identifier for each page. Right now, a lot of the functionality is hardcoded, but we're looking to fix that later in the Hacker School batch. Installation requires <a href="http://nodejs.org/">node.js</a>, and is quite simple:</p>
+<div class="highlight"><pre><span class="o">&gt;</span> <span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="o">:</span><span class="c1">//github.com/sudowhoami/distroweb/</span>
+<span class="o">&gt;</span> <span class="n">cd</span> <span class="n">distroweb</span>
+<span class="o">&gt;</span> <span class="n">node</span> <span class="n">distroweb</span><span class="p">.</span><span class="n">js</span>
+<span class="n">Welcome</span> <span class="n">to</span> <span class="n">distroWeb</span><span class="o">!</span>  <span class="n">Spinning</span> <span class="n">up</span> <span class="n">servers</span><span class="p">...</span>
+<span class="nl">Proxy:</span>  <span class="n">Listening</span> <span class="n">on</span> <span class="n">port</span> <span class="mi">1234</span>
+<span class="nl">Server:</span>  <span class="n">Listening</span> <span class="n">on</span> <span class="n">port</span> <span class="mi">12345</span>
+<span class="nl">DHT:</span>  <span class="n">Listening</span> <span class="n">on</span> <span class="n">port</span> <span class="mi">54321</span>
+<span class="n">All</span> <span class="n">servers</span> <span class="n">started</span> <span class="n">ok</span>
+</pre></div>
+
+
+<p>This can be followed by browsing to pages encoded in the above format.<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup> </p>
+<p>Once the server is running, users can browse DistroWeb by visiting pages encoded in the above format. (At the time of initial writing, we haven't implemented a lot of features like bootstrapping a person's initial list of peers, or implementing <a href="http://en.wikipedia.org/wiki/TCP_hole_punching">TCP hole punching</a>, so fetching documents might require a bit of code-diving — however, I'm documenting here what we have left to write and will add addenda as these features are coded and DistroWeb gets closer to "release".)</p>
+<h1>The design of DistroWeb</h1>
+<p>The following is a combination of documentation and design spec, with the intention of shifting the points here from the latter into the former category as the remaining DistroWeb functionality gets coded, probably in early April.</p>
+<h2>High-level design</h2>
+<p>A DistroWeb node is initialized by executing the file <code>distroweb.js</code>, which serves as a wrapper file that starts three servers - distroProxy, which receives HTTP GET requests from the browser, distroServer, which handles content delivery (in conjunction with distroClient) between nodes based on requests using the distroWeb protocol, and the DHT, a distributed hash table which is used to look up metadata about a requested hash (including, crucially, which nodes are "seeding" that hash, so that the distroClient can issue requests to that node).</p>
+<h2>Distributed hash table</h2>
+<p>One of the core concerns we had when writing DistroWeb is that we wanted to reduce our reliance on centralized servers as much as possible. We took our inspiration from distributed protocols (most notably <a href="http://en.wikipedia.org/wiki/BitTorrent">BitTorrent</a>). Traditionally, files shared through BitTorrent have been accessed through central tracker files, but more recently people have been using the Kademlia protocol to find files on a network. DistroWeb reimplements the distributed hash table idea that is at the heart of protocols like Kademlia. Currently, this is implemented by providing (currently, hardcoding) a list of some peers which is distributed to each node on initial startup. When a page is requested via a hash, the <a href="http://en.wikipedia.org/wiki/Hamming_distance">Hamming distance</a> between the binary encodings of the hash and each peer's node ID is calculated, and then a request for the hash including the port being listened on is passed along to the "closest" peer to that node. If the connection fails, the request is passed to the next closest and so on. At the receiving end, the node pushes the address that the connection was received on and the port it is listening on onto the request and continues to relay it until it reaches a node that doesn't have any closer nodes listed. This peer then "takes responsibility" for tracking the document, serving whatever tracker information it has on that hash to the originator, and accepting notifications from nodes that a particular version of a file is being served. If it doesn't currently track that file, it creates a tracker file and sends the empty string as a response. Abstractly, the distributed hash table is implemented as an interface for creating and adding metadata about a file, with the tracker node handling cleanup of dropped nodes and obsolete data. A final feature to increase redundancy and scalability for popular files involves having nodes that route many requests for a tracker file take responsibility for tracking it themselves. This should allow the network to be robust against trackers failing, as tracker files will get distributed to other accessible nodes near that file. </p>
+<h2>Peer regeneration</h2>
+<p><sup id="fnref:3"><a class="footnote-ref" href="#fn:3" rel="footnote">3</a></sup>If a peer times out or does not respond to DistroWeb requests while searching for a file, other peers are asked for some of their peers in order to replace the missing peers. Peers that initiate a DistroWeb request are also added to the recipient's peers list, up to a limit. Peers that time out are only removed from a list if they can be replaced - if the end of the peers list is reached without making a valid connection the assumption is made that the client's network connection is temporarily nonfunctional. When peers are replaced or added, the list of tracker files will be checked to see whether any new peers are closer to the node's tracked hashes than the node itself, and if they are, those tracker files will be sent to the nodes in question for concatenation to whatever tracker file they currently have. </p>
+<h2>Signed versioning</h2>
+<p><sup id="fnref:4"><a class="footnote-ref" href="#fn:4" rel="footnote">4</a></sup>Documents will carry a header signed with the private key corresponding to their hash - this signature will consist of a version number and checksum of the content. Additionally, the tracker packets will keep track of version numbers, to more easily facilitate updating of content. If a tracker node is informed that someone is seeding a newer version of a document, it will check that the document corresponds to the same hash and then notify the nodes that it is tracking that a newer version is available. (Generally, this will happen first when the owner of the document updates it and sends a notification about updating it into the DHT). Thus, someone who hosts a page on the DistroWeb can update their page simply by generating a new signature with a higher version number and requesting it, at which point it will be seeded by listening nodes tracked by the tracker.</p>
+<h2>Client-based naming</h2>
+<p><sup id="fnref:5"><a class="footnote-ref" href="#fn:5" rel="footnote">5</a></sup>Clients can choose the names that they apply to documents, but documents include a suggested shortname and longname that the client will associated with a given hash. For example, if a page uses <code>bob</code> as a shortname, and <code>bobs_cutlery</code> as a longname, a user that has accessed that hash once will be able to browse to it at <code>http://localhost:1234/distroweb/bob</code>, <code>http://localhost:1234/distroweb/bobs_cutlery</code>, or the original hash. Name collisions will be handled by defaulting to the long name or appending a numeral to the name. Initial linking will be done by hash, but once a page is accessed the proxy server will issue a 301 redirect to the actual page. Pages on the World Wide Web can also be referenced and linked to within DistroWeb pages; <code>http://localhost:1234/www.reddit.com</code> returns a 301 to <code>http://www.reddit.com/</code>, for example.</p>
+<h2>Distributed vote-based search</h2>
+<p><sup id="fnref:6"><a class="footnote-ref" href="#fn:6" rel="footnote">6</a></sup>Searching DistroWeb involves sending out UDP packets with the search query to all of one's neighbors, who then pass along the packet, sending votes for a particular page back. If a node is storing a page and wishes to index it for public search, they do so by using their node ID to create a unique mapping from words to bitmasks, then use these bitmasks in constructing a <a href="http://en.wikipedia.org/wiki/Bloom_filter">Bloom filter</a> for that document. These Bloom filters, along with the hashes used to create them, are passed along to trackers for that document (through the DHT), which run checks against incoming search queries and send back the IDs of matched hashes. The matched hashes are then compiled together at the client end into a list, ranked by the number of matched Bloom filters. </p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>We may end up having the installation attempt to alias distroweb to localhost, to produce http://distroweb/ urls.&#160;<a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>At the time of initial writing, we haven't implemented a lot of features like bootstrapping a person's initial list of peers, or implementing <a href="http://en.wikipedia.org/wiki/TCP_hole_punching">TCP hole punching</a>, so fetching documents might require a bit of code-diving - however, I'm documenting here what we have left to write and will add addenda as these features are coded and DistroWeb gets closer to "release".&#160;<a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p>As of March 17, this hasn't been implemented yet - only the proxy, file fetcher, and DHT have been implemented - but the plan is to implement it in April. These footnotes will be amended as these features are added.&#160;<a class="footnote-backref" href="#fnref:3" rev="footnote" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:4">
+<p>This also hasn't been implemented.&#160;<a class="footnote-backref" href="#fnref:4" rev="footnote" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:5">
+<p>This isn't implemented yet either, except for the external redirect to the web.&#160;<a class="footnote-backref" href="#fnref:5" rev="footnote" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:6">
+<p>Also not yet implemented.&#160;<a class="footnote-backref" href="#fnref:6" rev="footnote" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+  </div>
+
+
+<div class="article-tag-list">
+<span class="label label-default">Tags</span>
+	<a href="./tag/hacker-school.html"><i class="fa fa-tag"></i>hacker school</a>&nbsp;
+	<a href="./tag/coding.html"><i class="fa fa-tag"></i>coding</a>&nbsp;
+	<a href="./tag/distroweb.html"><i class="fa fa-tag"></i>distroweb</a>&nbsp;
+	<a href="./tag/node.html"><i class="fa fa-tag"></i>node</a>&nbsp;
+	<a href="./tag/javascript.html"><i class="fa fa-tag"></i>javascript</a>&nbsp;
+</div>
+  <hr />
+  <div class="well well-sm">  <!-- Social media sharing buttons -->
+
+    <!-- Google+ -->
+    <div class="g-plus" data-action="share" data-annotation="bubble"></div>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <div class="g-plusone" data-size="medium"></div>&nbsp;
+
+    <!-- Facebook -->
+    <div class="fb-like" 
+         data-href="./distroweb.html" 
+         data-layout="button_count" 
+         data-action="like" data-show-faces="true" 
+         data-share="true">
+    </div>
+    &nbsp;
+  </div> <!-- /Social media sharing buttons -->
+</article>
+        </div><!-- /content -->
+
+        <div class="col-md-3 sidebar-nav" id="sidebar">
+
+<div class="row">
+<div class="col-xs-6 col-md-12">
+<h4><i class="fa fa-comment fa-fw fa-lg"></i> Social</h4>
+<ul class="list-unstyled social-links">
+    <li><a href="http://twitter.com/andreemonette" target="_blank">
+<i class="fa fa-twitter-square fa-fw fa-lg" title="Twitter"></i> 		Twitter
+	</a></li>
+    <li><a href="http://github.com/andreecmonette" target="_blank">
+<i class="fa fa-github-square fa-fw fa-lg" title="GitHub"></i> 		GitHub
+	</a></li>
+</ul>
+</div>
+
+<div class="col-xs-6 col-md-12">
+<h4><i class="fa fa-folder fa-fw fa-lg"></i> Categories</h4>
+<ul class="list-unstyled category-links">
+  <li><a href="./category/blog.html" >
+    <i class="fa fa-folder-open fa-fw fa-lg"></i> Blog</a></li>
+  <li><a href="./category/programming.html" >
+    <i class="fa fa-folder-open fa-fw fa-lg"></i> Programming</a></li>
+</ul>
+</div>
+
+</div> <!-- /row -->
+
+<h4><i class="fa fa-tags fa-fw fa-lg"></i> Tags</h4>
+<p class="tag-cloud">
+<span class="tag-1">
+    <a href="./tag/coding.html">
+        <i class="fa fa-tag fa-fw fa-lg"></i>coding
+    </a>
+</span>
+<span class="tag-1">
+    <a href="./tag/hacker-school.html">
+        <i class="fa fa-tag fa-fw fa-lg"></i>hacker school
+    </a>
+</span>
+<span class="tag-4">
+    <a href="./tag/node.html">
+        <i class="fa fa-tag fa-fw fa-lg"></i>node
+    </a>
+</span>
+<span class="tag-4">
+    <a href="./tag/distroweb.html">
+        <i class="fa fa-tag fa-fw fa-lg"></i>distroweb
+    </a>
+</span>
+<span class="tag-4">
+    <a href="./tag/javascript.html">
+        <i class="fa fa-tag fa-fw fa-lg"></i>javascript
+    </a>
+</span>
+<span class="tag-4">
+    <a href="./tag/beginning.html">
+        <i class="fa fa-tag fa-fw fa-lg"></i>beginning
+    </a>
+</span>
+<span class="tag-4">
+    <a href="./tag/python.html">
+        <i class="fa fa-tag fa-fw fa-lg"></i>python
+    </a>
+</span>
+<span class="tag-4">
+    <a href="./tag/musing.html">
+        <i class="fa fa-tag fa-fw fa-lg"></i>musing
+    </a>
+</span>
+</p>
+
+<h4><i class="fa fa-rss fa-fw fa-lg"></i> Feeds</h4>
+<ul class="list-unstyled">
+    <li><a href="http://acmonette.com/feeds/all.atom.xml" 
+		   type="application/atom+xml" rel="alternate">
+		<i class="fa fa-rss-square fa-fw fa-lg"></i> Atom Feed</a></li>
+</ul>
+
+<hr />
+
+        </div><!--/sidebar -->
+      </div><!--/row-->
+    </div><!--/container-->
+
+    <div class="container">
+      <footer id="page-footer">
+ 
+        <address id="colophon">
+          Blog powered by <a href="http://getpelican.com/">Pelican</a>
+                      and <a href="http://python.org">Python</a>  
+		  &nbsp;&bull;&nbsp;
+		  <a href="https://github.com/robulouski/voidy-bootstrap"
+			 target="_blank">VoidyBootstrap</a> theme by 
+		  <a href="http://www.voidynullness.net"
+			 target="_blank">RKI</a>  
+        </address><!-- /colophon  -->
+      </footer>
+	</div>
+
+
+    <!-- javascript -->
+	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<!-- Facebook -->
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+</script>
+
+<!-- Twitter -->
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+<!-- Google+ -->
+<!-- Synchronous 
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+-->
+<!-- Asynchronous -->
+<script type="text/javascript">
+  (function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/platform.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+</script>  </body>
+</html>
